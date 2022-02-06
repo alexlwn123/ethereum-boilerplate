@@ -32,3 +32,5 @@ typechain
 #Truffle files
 /Truffle/build
 /Truffle/data
+
+package-lock.json
