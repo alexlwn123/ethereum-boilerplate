@@ -64,9 +64,6 @@ function Account() {
     logout,
     user,
     provider,
-    web3,
-    environment,
-    connector,
   } = useMoralis();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isAuthModalVisible, setIsAuthModalVisible] = useState(false);
@@ -107,16 +104,23 @@ function Account() {
                 key={key}
                 onClick={async () => {
                   try {
-                    console.log("PROVIDER", await provider);
-                    console.log("web3", await web3);
-                    console.log("connector", await connector);
-                    console.log("env", await environment);
-
+                    //Step 1
                     await authenticate({
                       signingMessage: "Welcome to Snow Rider!",
                       provider: connectorId,
                     });
                     window.localStorage.setItem("connectorId", connectorId);
+                    setIsAuthModalVisible(false);
+                    //Step 2
+                    if (chainId != "0xa86a")
+                      provider
+                        .request({
+                          method: "wallet_addEthereumChain",
+                          params: [AVALANCHE_MAINNET_PARAMS],
+                        })
+                        .catch((error) => {
+                          console.error(error);
+                        });
                     setIsAuthModalVisible(false);
                   } catch (e) {
                     console.error(e);
@@ -135,22 +139,6 @@ function Account() {
 
   return (
     <>
-      {/* <button
-        onClick={async () => {
-          try {
-            console.log("change")
-            await web3._provider.request({
-              method: "wallet_switchEthereumChain",
-              params: [{ chainId: "0x38" }],
-            });
-            console.log("changed")
-          } catch (e) {
-            console.error(e);
-          }
-        }}
-      >
-        Hi
-      </button> */}
       <div style={styles.account} onClick={() => setIsModalVisible(true)}>
         <p style={{ marginRight: "5px", ...styles.text }}>
           {getEllipsisTxt(account, 6)}
@@ -177,69 +165,133 @@ function Account() {
           }}
           bodyStyle={{ padding: "15px" }}
         >
-          <p style={{ fontSize: "16px", fontWeight: "500" }}>Nickname</p>
-          <p>
-            {console.log(user.attributes)}
-            {console.log(user.get("riderName"))}
-            {user.attributes.riderName
-              ? user.attributes.riderName
-              : "undefined"}
-            {console.log(user.attributes)}
-          </p>
-          <div style={{ marginTop: "10px", padding: "0 10px" }}>
-            <Button
-              onClick={() => {
-                user.set("riderName", "alexlwn");
-              }}
-            >
-              <SelectOutlined style={{ marginRight: "5px" }} />
-              View on Explorer
-            </Button>
-          </div>
+          {!isAuthenticated || !chainId || chainId != "0xa86a" ? (
+            <div style={{ marginTop: "10px", padding: "0 10px" }}>
+              <p style={{ fontSize: "16px", fontWeight: "500" }}>
+                Wrong Network Detected
+              </p>
+              <Button
+                onClick={() => {
+                  user.set("riderName", "alexlwn");
+                  console.log("CLICKED");
+
+                  provider
+                    .request({
+                      method: "wallet_addEthereumChain",
+                      params: [AVALANCHE_MAINNET_PARAMS],
+                    })
+                    .then(() => {
+                      console.log("Done");
+                      setIsModalVisible(false);
+                    })
+                    .catch((error) => {
+                      console.error(error);
+                    });
+                }}
+              >
+                <SelectOutlined style={{ marginRight: "5px" }} />
+                Change Network to Avalanche C-Chain
+              </Button>
+            </div>
+          ) : (
+            <>
+              {!isAuthenticated ? (
+                <div
+                  style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}
+                >
+                  <p style={styles.text}>Connected</p>
+                  <p style={{ fontSize: "16px", fontWeight: "500" }}>
+                    2. Sign On
+                  </p>
+                  {connectors.map(({ title, icon, connectorId }, key) => (
+                    <div
+                      style={styles.connector}
+                      key={key}
+                      onClick={async () => {
+                        try {
+                          console.log("PROVIDER", await provider);
+
+                          //Step 1
+                          await authenticate({
+                            signingMessage: "Welcome to Snow Rider!",
+                            provider: connectorId,
+                          });
+                          window.localStorage.setItem(
+                            "connectorId",
+                            connectorId,
+                          );
+                          //Step 2
+                          console.log("PROVIDER", await provider);
+                          console.log("network", await chainId);
+                          if (chainId != "0xa86a")
+                            provider
+                              .request({
+                                method: "wallet_addEthereumChain",
+                                params: [AVALANCHE_MAINNET_PARAMS],
+                              })
+                              .catch((error) => {
+                                console.error(error);
+                              });
+                          setIsAuthModalVisible(false);
+                        } catch (e) {
+                          console.error(e);
+                        }
+                      }}
+                    >
+                      <img src={icon} alt={title} style={styles.icon} />
+                      <Text style={{ fontSize: "14px" }}>{title}</Text>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <>
+                  <Card
+                    style={{
+                      marginTop: "10px",
+                      borderRadius: "1rem",
+                    }}
+                    bodyStyle={{ padding: "15px" }}
+                  >
+                    <Address
+                      avatar="left"
+                      size={6}
+                      copyable
+                      style={{ fontSize: "20px" }}
+                    />
+                    <div style={{ marginTop: "10px", padding: "0 10px" }}>
+                      <a
+                        href={`${getExplorer(chainId)}/address/${account}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <SelectOutlined style={{ marginRight: "5px" }} />
+                        View on Explorer
+                      </a>
+                    </div>
+                  </Card>
+                  <Button
+                    size="large"
+                    type="primary"
+                    style={{
+                      width: "100%",
+                      marginTop: "10px",
+                      borderRadius: "0.5rem",
+                      fontSize: "16px",
+                      fontWeight: "500",
+                    }}
+                    onClick={async () => {
+                      await logout();
+                      window.localStorage.removeItem("connectorId");
+                      setIsModalVisible(false);
+                    }}
+                  >
+                    Disconnect Wallet
+                  </Button>
+                </>
+              )}
+            </>
+          )}
         </Card>
-        Account
-        <Card
-          style={{
-            marginTop: "10px",
-            borderRadius: "1rem",
-          }}
-          bodyStyle={{ padding: "15px" }}
-        >
-          <Address
-            avatar="left"
-            size={6}
-            copyable
-            style={{ fontSize: "20px" }}
-          />
-          <div style={{ marginTop: "10px", padding: "0 10px" }}>
-            <a
-              href={`${getExplorer(chainId)}/address/${account}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <SelectOutlined style={{ marginRight: "5px" }} />
-              View on Explorer
-            </a>
-          </div>
-        </Card>
-        <Button
-          size="large"
-          type="primary"
-          style={{
-            width: "100%",
-            marginTop: "10px",
-            borderRadius: "0.5rem",
-            fontSize: "16px",
-            fontWeight: "500",
-          }}
-          onClick={async () => {
-            await logout();
-            window.localStorage.removeItem("connectorId");
-            setIsModalVisible(false);
-          }}
-        >
-          Disconnect Wallet
-        </Button>
       </Modal>
     </>
   );

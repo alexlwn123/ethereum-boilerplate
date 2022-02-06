@@ -69,12 +69,6 @@ const App = ({ isServerInfo }) => {
           <MenuItems />
           <div style={styles.headerRight}>
             <Chains />
-            {/* <TokenPrice
-              address="0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
-              chain="avalanche"
-              image="https://img.api.cryptorank.io/coins/60x60.avalanche1629705441155.png"
-              size="40px"
-            /> */}
             <Profile />
             <Account />
           </div>
