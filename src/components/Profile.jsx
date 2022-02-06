@@ -1,25 +1,13 @@
+import { useState, useEffect } from "react";
 import { useMoralis } from "react-moralis";
 import { getEllipsisTxt } from "helpers/formatters";
-import Blockie from "../Blockie";
+import Blockie from "./Blockie";
 import { Button, Card, Modal } from "antd";
-import { useState } from "react";
-import Address from "../Address/Address";
+import Address from "./Address/Address";
 import { SelectOutlined } from "@ant-design/icons";
 import { getExplorer } from "helpers/networks";
 import Text from "antd/lib/typography/Text";
-import { connectors } from "./config";
-// import Moralis from "moralis/types";
-export const AVALANCHE_MAINNET_PARAMS = {
-  chainId: "0xA86A",
-  chainName: "Avalanche Mainnet C-Chain",
-  nativeCurrency: {
-    name: "Avalanche",
-    symbol: "AVAX",
-    decimals: 18,
-  },
-  rpcUrls: ["https://api.avax.network/ext/bc/C/rpc"],
-  blockExplorerUrls: ["https://snowtrace.io/"],
-};
+import { connectors } from "./Account/config";
 const styles = {
   account: {
     height: "42px",
@@ -53,23 +41,27 @@ const styles = {
     marginBottom: "8px",
     height: "30px",
   },
+  token: {
+    padding: "0 7px",
+    height: "42px",
+    gap: "5px",
+    width: "fit-content",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    whiteSpace: "nowrap",
+  },
 };
-
-function Account() {
-  const {
-    authenticate,
-    isAuthenticated,
-    account,
-    chainId,
-    logout,
-    user,
-    provider,
-    web3,
-    environment,
-    connector,
-  } = useMoralis();
+function Profile(props) {
+  const { authenticate, isAuthenticated, chainId, account, user } = useMoralis();
+  const [isProfileVisible, setIsProfileVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isAuthModalVisible, setIsAuthModalVisible] = useState(false);
+  const [isGuest, setIsGuest] = useState(false);
+
+  // useEffect(() => {}, [riderName, avatar]);
+
+  const noLogoToken = "https://etherscan.io/images/main/empty-token.png";
 
   if (!isAuthenticated || !account) {
     return (
@@ -107,11 +99,6 @@ function Account() {
                 key={key}
                 onClick={async () => {
                   try {
-                    console.log("PROVIDER", await provider);
-                    console.log("web3", await web3);
-                    console.log("connector", await connector);
-                    console.log("env", await environment);
-
                     await authenticate({
                       signingMessage: "Welcome to Snow Rider!",
                       provider: connectorId,
@@ -131,8 +118,26 @@ function Account() {
         </Modal>
       </>
     );
+    // return (
+    //   <div style={styles.token}>
+    //     <img
+    //       src={props.image || noLogoToken}
+    //       alt="logo"
+    //       style={{ height: props?.size || "35px" }}
+    //     />
+    //     <span
+    //       style={{ cursor: "pointer" }}
+    //       onClick={toggleDisplayStyle}
+    //       title={`Show in ${isUSDMode ? "ETH" : "USD"}`}
+    //     >
+    //       {formattedData &&
+    //         (isUSDMode
+    //           ? formattedData.formattedUsd
+    //           : formattedData.formattedNative)}
+    //     </span>
+    //   </div>
+    // );
   }
-
   return (
     <>
       {/* <button
@@ -244,5 +249,4 @@ function Account() {
     </>
   );
 }
-
-export default Account;
+export default Profile;

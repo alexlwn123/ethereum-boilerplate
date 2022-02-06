@@ -8,13 +8,12 @@ import {
 } from "react-router-dom";
 import Account from "components/Account/Account";
 import Chains from "components/Chains";
-import TokenPrice from "components/TokenPrice";
+import Profile from "components/Profile";
 import ERC20Balance from "components/ERC20Balance";
 import NFTBalance from "components/NFTBalance";
 import AvatarSelection from "components/AvatarSelection";
 import { Layout } from "antd";
 import "antd/dist/antd.css";
-import NativeBalance from "components/NativeBalance";
 import "./style.css";
 import QuickStart from "components/QuickStart";
 import Contract from "components/Contract/Contract";
@@ -70,13 +69,13 @@ const App = ({ isServerInfo }) => {
           <MenuItems />
           <div style={styles.headerRight}>
             <Chains />
-            <TokenPrice
+            {/* <TokenPrice
               address="0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
               chain="avalanche"
               image="https://img.api.cryptorank.io/coins/60x60.avalanche1629705441155.png"
               size="40px"
-            />
-            <NativeBalance />
+            /> */}
+            <Profile />
             <Account />
           </div>
         </Header>
@@ -92,7 +91,7 @@ const App = ({ isServerInfo }) => {
             <Route path="/nftBalance">
               <NFTBalance />
             </Route>
-            <Route path="/avatarSelection">
+            <Route path="/profile">
               <AvatarSelection />
             </Route>
             <Route path="/contract">

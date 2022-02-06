@@ -27,8 +27,8 @@ function MenuItems() {
       <Menu.Item key="/nftBalance">
         <NavLink to="/nftBalance">🖼 NFTs</NavLink>
       </Menu.Item>
-      <Menu.Item key="/avatarSelection">
-        <NavLink to="/avatarSelection">🖼 Avatar Selection</NavLink>
+      <Menu.Item key="/profile">
+        <NavLink to="/profile">🖼 Profile</NavLink>
       </Menu.Item>
       <Menu.Item key="/contract">
         <NavLink to="/contract">📄 Contract</NavLink>
