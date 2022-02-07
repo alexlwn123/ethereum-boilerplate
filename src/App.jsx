@@ -11,7 +11,7 @@ import Chains from "components/Chains";
 import Profile from "components/Profile";
 import ERC20Balance from "components/ERC20Balance";
 import NFTBalance from "components/NFTBalance";
-import AvatarSelection from "components/AvatarSelection";
+import EditProfile from "components/EditProfile/EditProfile";
 import { Layout } from "antd";
 import "antd/dist/antd.css";
 import "./style.css";
@@ -86,7 +86,7 @@ const App = ({ isServerInfo }) => {
               <NFTBalance />
             </Route>
             <Route path="/profile">
-              <AvatarSelection />
+              <EditProfile />
             </Route>
             <Route path="/contract">
               <Contract />
