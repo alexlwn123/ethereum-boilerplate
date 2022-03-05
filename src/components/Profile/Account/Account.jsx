@@ -1,6 +1,18 @@
-// import { useState, useEffect } from "react";
 import { useMoralis } from "react-moralis";
-// import { getEllipsisTxt } from "helpers/formatters";
+import { getEllipsisTxt } from "helpers/formatters";
+import Blockie from "../../Blockie";
+import { useState } from "react";
+export const AVALANCHE_MAINNET_PARAMS = {
+  chainId: "0xA86A",
+  chainName: "Avalanche Mainnet C-Chain",
+  nativeCurrency: {
+    name: "Avalanche",
+    symbol: "AVAX",
+    decimals: 18,
+  },
+  rpcUrls: ["https://api.avax.network/ext/bc/C/rpc"],
+  blockExplorerUrls: ["https://snowtrace.io/"],
+};
 const styles = {
   account: {
     height: "42px",
@@ -34,33 +46,22 @@ const styles = {
     marginBottom: "8px",
     height: "30px",
   },
-  token: {
-    padding: "0 7px",
-    height: "42px",
-    gap: "5px",
-    width: "fit-content",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    whiteSpace: "nowrap",
-  },
 };
-function Profile() {
-  const { isAuthenticated, chainId, account, user } = useMoralis();
 
-  // useEffect(() => {}, [riderName, avatar]);
+function Account() {
+  const { account } = useMoralis();
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
-  if (!isAuthenticated || !account || !chainId) {
-    return <div />;
-  }
   return (
     <>
-      <div style={styles.account}>
+      <div style={styles.account} onClick={() => setIsModalVisible(true)}>
         <p style={{ marginRight: "5px", ...styles.text }}>
-          {user.get("riderName")}
+          {getEllipsisTxt(account, 6)}
         </p>
+        <Blockie currentWallet scale={3} />
       </div>
     </>
   );
 }
-export default Profile;
+
+export default Account;

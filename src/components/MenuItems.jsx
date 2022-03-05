@@ -1,10 +1,7 @@
-import { useLocation } from "react-router";
 import { Menu } from "antd";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function MenuItems() {
-  const { pathname } = useLocation();
-
   return (
     <Menu
       theme="light"
@@ -16,22 +13,18 @@ function MenuItems() {
         width: "100%",
         justifyContent: "center",
       }}
-      defaultSelectedKeys={[pathname]}
     >
-      <Menu.Item key="/quickstart">
-        <NavLink to="/quickstart">🚀 Quick Start</NavLink>
+      <Menu.Item key="/">
+        <Link to="/">🚀 Quick Start</Link>
       </Menu.Item>
       <Menu.Item key="/erc20balance">
-        <NavLink to="/erc20balance">💰 Balances</NavLink>
+        <Link to="/erc20balance">💰 Balances</Link>
       </Menu.Item>
       <Menu.Item key="/nftBalance">
-        <NavLink to="/nftBalance">🖼 NFTs</NavLink>
+        <Link to="/nftBalance">🖼 NFTs</Link>
       </Menu.Item>
       <Menu.Item key="/profile">
-        <NavLink to="/profile">🖼 Profile</NavLink>
-      </Menu.Item>
-      <Menu.Item key="/contract">
-        <NavLink to="/contract">📄 Contract</NavLink>
+        <Link to="/profile">🖼 Profile</Link>
       </Menu.Item>
     </Menu>
   );
