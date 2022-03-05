@@ -1,4 +1,5 @@
 import { useMoralis } from "react-moralis";
+import { useChain } from "react-moralis";
 import { getEllipsisTxt } from "helpers/formatters";
 import Blockie from "../Blockie";
 import { Button, Card, Modal } from "antd";
@@ -56,15 +57,10 @@ const styles = {
 };
 
 function Account() {
-  const {
-    authenticate,
-    isAuthenticated,
-    account,
-    chainId,
-    logout,
-    user,
-    provider,
-  } = useMoralis();
+  const { authenticate, isAuthenticated, account, logout, user, provider } =
+    useMoralis();
+  const { switchNetwork, chainId, chain } = useChain();
+  console.log(chain);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isAuthModalVisible, setIsAuthModalVisible] = useState(false);
 
@@ -112,15 +108,7 @@ function Account() {
                     window.localStorage.setItem("connectorId", connectorId);
                     setIsAuthModalVisible(false);
                     //Step 2
-                    if (chainId != "0xa86a")
-                      provider
-                        .request({
-                          method: "wallet_addEthereumChain",
-                          params: [AVALANCHE_MAINNET_PARAMS],
-                        })
-                        .catch((error) => {
-                          console.error(error);
-                        });
+                    if (chainId != "0xa86a") switchNetwork("0xA86A");
                     setIsAuthModalVisible(false);
                   } catch (e) {
                     console.error(e);
@@ -165,6 +153,7 @@ function Account() {
           }}
           bodyStyle={{ padding: "15px" }}
         >
+          {console.log("chainId: ", chainId)}
           {!isAuthenticated || !chainId || chainId != "0xa86a" ? (
             <div style={{ marginTop: "10px", padding: "0 10px" }}>
               <p style={{ fontSize: "16px", fontWeight: "500" }}>
@@ -182,6 +171,7 @@ function Account() {
                     })
                     .then(() => {
                       console.log("Done");
+                      window.location.reload();
                       setIsModalVisible(false);
                     })
                     .catch((error) => {

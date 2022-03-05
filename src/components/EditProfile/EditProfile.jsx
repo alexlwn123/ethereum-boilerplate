@@ -1,6 +1,5 @@
 import Transfer from "./components/Transfer";
 import NativeBalance from "../NativeBalance";
-import Address from "../Address/Address";
 import Blockie from "../Blockie";
 import { Card } from "antd";
 
@@ -32,7 +31,6 @@ function EditProfile() {
       title={
         <div style={styles.header}>
           <Blockie scale={5} avatar currentWallet style />
-          <Address size="6" copyable />
           <NativeBalance />
         </div>
       }

@@ -1,10 +1,8 @@
-import { CreditCardOutlined } from "@ant-design/icons";
-import { Button, Input, notification } from "antd";
+import { Form, Button, Input } from "antd";
 import Text from "antd/lib/typography/Text";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import NFTSelector from "./NFTSelector";
 import { useMoralis } from "react-moralis";
-import AddressInput from "../../AddressInput";
-import AssetSelector from "./AssetSelector";
 
 const styles = {
   card: {
@@ -31,6 +29,7 @@ const styles = {
     marginTop: "20px",
     display: "flex",
     alignItems: "center",
+    alignContent: "center",
   },
   textWrapper: { maxWidth: "80px", width: "100%" },
   row: {
@@ -42,121 +41,69 @@ const styles = {
 };
 
 function Transfer() {
-  const { Moralis } = useMoralis();
-  const [receiver, setReceiver] = useState();
-  const [asset, setAsset] = useState();
-  const [tx, setTx] = useState();
-  const [amount, setAmount] = useState();
-  const [isPending, setIsPending] = useState(false);
-
+  // Moralis.start()
+  const [asset, setAsset] = useState("");
+  // const [name, setName] = useState("");
+  console.log(asset, setAsset);
+  // const [name, setName] = useState("");
+  // const [user, setUser] = useState("");
+  const { user } = useMoralis();
   useEffect(() => {
-    asset && amount && receiver ? setTx({ amount, receiver, asset }) : setTx();
-  }, [asset, amount, receiver]);
+    // setUser(Moralis.User.current());
+    console.log(user);
+    // console.log(user.get("riderName"));
+  }, [user]);
 
-  const openNotification = ({ message, description }) => {
-    notification.open({
-      placement: "bottomRight",
-      message,
-      description,
-      onClick: () => {
-        console.log("Notification Clicked!");
-      },
-    });
+  const onFinish = (values) => {
+    console.log("finish", values);
+    user.set("riderName", values.riderName);
+    window.location.reload();
   };
-
-  async function transfer() {
-    const { amount, receiver, asset } = tx;
-
-    let options = {};
-
-    switch (asset.token_address) {
-      case "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee":
-        options = {
-          native: "native",
-          amount: Moralis.Units.ETH(amount),
-          receiver,
-          awaitReceipt: false,
-        };
-        break;
-      default:
-        options = {
-          type: "erc20",
-          amount: Moralis.Units.Token(amount, asset.decimals),
-          receiver,
-          contractAddress: asset.token_address,
-          awaitReceipt: false,
-        };
-    }
-
-    setIsPending(true);
-    const txStatus = await Moralis.transfer(options);
-
-    txStatus
-      .on("transactionHash", (hash) => {
-        openNotification({
-          message: "🔊 New Transaction",
-          description: `${hash}`,
-        });
-        console.log("🔊 New Transaction", hash);
-      })
-      .on("receipt", (receipt) => {
-        openNotification({
-          message: "📃 New Receipt",
-          description: `${receipt.transactionHash}`,
-        });
-        console.log("🔊 New Receipt: ", receipt);
-        setIsPending(false);
-      })
-      .on("error", (error) => {
-        openNotification({
-          message: "📃 Error",
-          description: `${error.message}`,
-        });
-        console.error(error);
-        setIsPending(false);
-      });
-  }
-
+  const onFinishFailed = (values) => {
+    console.error("finish", values);
+  };
   return (
     <div style={styles.card}>
       <div style={styles.tranfer}>
         <div style={styles.header}>
-          <h3>Transfer Assets</h3>
+          <h3>Edit Profile</h3>
         </div>
-        <div style={styles.select}>
-          <div style={styles.textWrapper}>
-            <Text strong>Address:</Text>
-          </div>
-          <AddressInput autoFocus onChange={setReceiver} />
-        </div>
-        <div style={styles.select}>
-          <div style={styles.textWrapper}>
-            <Text strong>Amount:</Text>
-          </div>
-          <Input
-            size="large"
-            prefix={<CreditCardOutlined />}
-            onChange={(e) => {
-              setAmount(`${e.target.value}`);
-            }}
-          />
-        </div>
-        <div style={styles.select}>
-          <div style={styles.textWrapper}>
-            <Text strong>Asset:</Text>
-          </div>
-          <AssetSelector setAsset={setAsset} style={{ width: "100%" }} />
-        </div>
-        <Button
-          type="primary"
-          size="large"
-          loading={isPending}
-          style={{ width: "100%", marginTop: "25px" }}
-          onClick={() => transfer()}
-          disabled={!tx}
+        <Form
+          name="Rider Profile"
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          initialValues={{ remember: true }}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          autoComplete="off"
         >
-          Transfer💸
-        </Button>
+          <div style={styles.select}>
+            <div style={styles.textWrapper}>
+              <Text strong>Rider Name</Text>
+            </div>
+            <Form.Item
+              name="riderName"
+              rules={[
+                { required: true, message: "Please input your Rider Name!" },
+              ]}
+            >
+              <Input size="large" />
+            </Form.Item>
+          </div>
+          <div style={styles.select}>
+            <div style={styles.textWrapper}>
+              <Text strong>Asset:</Text>
+            </div>
+            <NFTSelector style={{ width: "100%" }} />
+          </div>
+          <div style={styles.select}>
+            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+              <Button type="primary" htmlType="submit">
+                Submit
+              </Button>
+            </Form.Item>
+          </div>
+        </Form>
       </div>
     </div>
   );
