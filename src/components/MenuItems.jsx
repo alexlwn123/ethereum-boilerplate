@@ -15,7 +15,7 @@ function MenuItems() {
       }}
     >
       <Menu.Item key="/">
-        <Link to="/">🚀 Quick Start</Link>
+        <Link to="/">🚀 Landing</Link>
       </Menu.Item>
       <Menu.Item key="/erc20balance">
         <Link to="/erc20balance">💰 Balances</Link>

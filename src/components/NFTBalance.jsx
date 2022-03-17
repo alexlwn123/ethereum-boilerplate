@@ -36,7 +36,6 @@ function NFTBalance() {
   const { verifyMetadata } = useVerifyMetadata();
 
   async function transfer(nft, amount, receiver) {
-    console.log(nft, amount, receiver);
     const options = {
       type: nft?.contract_type?.toLowerCase(),
       tokenId: nft?.token_id,
@@ -69,7 +68,6 @@ function NFTBalance() {
     setAmount(e.target.value);
   };
 
-  console.log("NFTBalances", NFTBalances);
   return (
     <div style={{ padding: "15px", maxWidth: "1030px", width: "100%" }}>
       <h1>🖼 NFT Balances</h1>

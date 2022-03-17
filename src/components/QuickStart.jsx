@@ -1,9 +1,8 @@
-import { Image, Card, Timeline, Typography } from "antd";
+import { Image } from "antd";
 import React from "react";
 // import { useMoralis } from "react-moralis";
 import Skiing from "../assets/Skiing.jpg";
-
-const { Text } = Typography;
+// import Unity, { UnityContext } from "react-unity-webgl";
 
 const styles = {
   title: {
@@ -23,48 +22,27 @@ const styles = {
   },
 };
 
+// const unityContext = new UnityContext({
+//   loaderUrl: "../../public/snowRider-build.loader.js",
+//   dataUrl: "../../public/snowRider-build.data",
+//   frameworkUrl: "../../public/snowRider-build.framework.js",
+//   codeUrl: "../../public/snowRider-build.wasm",
+// });
+// const unityContext = new UnityContext({
+//   loaderUrl: "public/snowRider-build.loader.js",
+//   dataUrl: "public/snowRider-build.data",
+//   frameworkUrl: "public/snowRider-build.framework.js",
+//   codeUrl: "public/snowRider-build.wasm",
+// });
+
 export default function QuickStart() {
   // const { Moralis } = useMoralis();
+  styles.title;
 
   return (
     <div style={{ display: "flex", gap: "10px" }}>
       <Image src={Skiing} />
-
-      <div>
-        <Card
-          style={styles.card}
-          title={
-            <>
-              💣 <Text strong>Starting Local Chain (optional)</Text>
-            </>
-          }
-        ></Card>
-        <Card
-          style={{ marginTop: "10px", ...styles.card }}
-          title={
-            <>
-              📡{" "}
-              <Text strong> Connecting your Local Chain to the Moralis DB</Text>
-            </>
-          }
-        >
-          <Timeline mode="left" style={styles.timeline}>
-            <Timeline.Item dot="💿"></Timeline.Item>
-            <Timeline.Item dot="⚙️">
-              <Text style={styles.text}>
-                Connect your Moralis Database and Local Chain:{" "}
-                <Text code>npm run connect</Text>
-              </Text>
-            </Timeline.Item>
-            <Timeline.Item dot="💾">
-              <Text style={styles.text}>
-                Add contract events you want to watch:{" "}
-                <Text code>npm run watch:events</Text>
-              </Text>
-            </Timeline.Item>
-          </Timeline>
-        </Card>
-      </div>
     </div>
+    // <Unity unityContext={unityContext} />
   );
 }

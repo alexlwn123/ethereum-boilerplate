@@ -1,11 +1,12 @@
 // import { useERC20Balance } from "hooks/useERC20Balance";
-import { useMoralis } from "react-moralis";
+import { useMoralis, useNFTBalances } from "react-moralis";
 import { Image, Select } from "antd";
 // import { useMemo } from "react";
 
 export default function NFTSelector({ setAsset, style }) {
   console.log(setAsset);
-  // const { getNFTBalances, data } = useNFTBalances();
+  const { getNFTBalances } = useNFTBalances();
+  console.log(getNFTBalances);
 
   const { Moralis } = useMoralis();
 
@@ -23,13 +24,14 @@ export default function NFTSelector({ setAsset, style }) {
   //   ];
   // }, [data]);
 
+  const fullBalance = false;
+
   function handleChange(value) {
     console.log(value);
-    // const token = fullBalance.find((token) => token.token_address === value);
-    // setAsset(token);
+    const token = fullBalance.find((token) => token.token_address === value);
+    setAsset(token);
   }
 
-  const fullBalance = false;
   return (
     <Select onChange={handleChange} size="large" style={style}>
       <div />

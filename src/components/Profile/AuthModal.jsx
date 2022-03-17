@@ -1,5 +1,4 @@
-import { useMoralis } from "react-moralis";
-import { useChain } from "react-moralis";
+import { useChain, useMoralis } from "react-moralis";
 import { connectors } from "./Account/config";
 import { Modal } from "antd";
 import Text from "antd/lib/typography/Text";
@@ -61,20 +60,29 @@ const AuthModal = (props) => {
             onClick={async () => {
               try {
                 //Step 1
+                if (isAuthenticated && chainId != "0xa86a") {
+                  console.log("switching chain");
+                  await switchNetwork("0xA86A");
+                  window.location.reload();
+                }
+                //Step 2
                 if (!isAuthenticated) {
                   console.log("authenticating");
                   await authenticate({
                     signingMessage: "Welcome to Snow Rider!",
                     provider: connectorId,
                   });
-                  window.localStorage.setItem("connectorId", connectorId);
-                }
-                //Step 2
-                if (chainId != "0xa86a") {
-                  console.log("switching chain");
                   await switchNetwork("0xA86A");
                   window.location.reload();
                 }
+                window.localStorage.setItem("connectorId", connectorId);
+                //Step 3
+                // console.log(user);
+                // const name = user.get("riderName");
+                // console.log("username", name);
+                // if (!name) {
+                //   user.set("riderName", account);
+                // }
                 setIsAuthModalVisible(false);
               } catch (e) {
                 console.error(e);

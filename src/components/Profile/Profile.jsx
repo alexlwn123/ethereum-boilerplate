@@ -3,6 +3,8 @@ import { useMoralis } from "react-moralis";
 // import { getEllipsisTxt } from "helpers/formatters";
 import AuthModal from "./AuthModal";
 import ProfileModal from "./ProfileModal";
+import { Image } from "antd";
+import Pic from "../../assets/Button-1.png";
 const styles = {
   account: {
     height: "42px",
@@ -21,8 +23,21 @@ const styles = {
 };
 function Profile() {
   const { isAuthenticated, account, user, chainId } = useMoralis();
+  const [riderName, setRiderName] = useState("");
 
-  useEffect(() => {}, [isAuthenticated, chainId, user]);
+  useEffect(() => {
+    if (isAuthenticated) {
+      const rider = user.get("riderName");
+      console.log("ridername", rider);
+      if (rider) {
+        console.log("setting rider to ", rider);
+        setRiderName(rider);
+      } else {
+        console.log("setting rider to ", user.id);
+        user.set("riderName", user.id);
+      }
+    }
+  }, [account, isAuthenticated, setRiderName, user]);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isAuthModalVisible, setIsAuthModalVisible] = useState(false);
@@ -32,11 +47,16 @@ function Profile() {
       <>
         <div
           onClick={() => {
-            console.log("auth", isAuthenticated, user, account, chainId);
             setIsAuthModalVisible(true);
           }}
+          style={{ alignItems: "center" }}
         >
-          <p style={styles.text}>Authenticate</p>
+          {/* <p style={styles.text}>Authenticate</p> */}
+          <Image
+            style={{ width: "200px", marginTop: "30px" }}
+            preview={false}
+            src={Pic}
+          />
         </div>
         <AuthModal
           isAuthModalVisible={isAuthModalVisible}
@@ -48,13 +68,12 @@ function Profile() {
   return (
     <>
       <div style={styles.account} onClick={() => setIsModalVisible(true)}>
-        <p style={{ marginRight: "5px", ...styles.text }}>
-          {user.get("riderName") ? user.get("riderName") : "Ridername"}
-        </p>
+        <p style={{ marginRight: "5px", ...styles.text }}>{riderName}</p>
       </div>
       <ProfileModal
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}
+        riderName={riderName}
       />
     </>
   );
