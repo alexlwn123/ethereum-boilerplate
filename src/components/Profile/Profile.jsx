@@ -5,6 +5,8 @@ import AuthModal from "./AuthModal";
 import ProfileModal from "./ProfileModal";
 import { Image } from "antd";
 import Pic from "../../assets/Button-1.png";
+import { Offline, Online } from "react-detect-offline";
+
 const styles = {
   account: {
     height: "42px",
@@ -67,14 +69,21 @@ function Profile() {
   }
   return (
     <>
-      <div style={styles.account} onClick={() => setIsModalVisible(true)}>
-        <p style={{ marginRight: "5px", ...styles.text }}>{riderName}</p>
-      </div>
-      <ProfileModal
-        isModalVisible={isModalVisible}
-        setIsModalVisible={setIsModalVisible}
-        riderName={riderName}
-      />
+      <Online>
+        <div style={styles.account} onClick={() => setIsModalVisible(true)}>
+          <p style={{ marginRight: "5px", ...styles.text }}>{riderName}</p>
+        </div>
+        <ProfileModal
+          isModalVisible={isModalVisible}
+          setIsModalVisible={setIsModalVisible}
+          riderName={riderName}
+        />
+      </Online>
+      <Offline>
+        <div style={styles.account}>
+          <p style={{ marginRight: "5px", ...styles.text }}>Offline</p>
+        </div>
+      </Offline>
     </>
   );
 }

@@ -83,7 +83,11 @@ const ProfileModal = (props) => {
         fontSize: "17px",
         fontWeight: "500",
       }}
-      style={{ fontSize: "16px", fontWeight: "500" }}
+      style={{
+        fontSize: "16px",
+        fontWeight: "500",
+        backgroundColor: "rgba(255,255,255,0.9)",
+      }}
       width="600px"
     >
       <div style={styles.header}>

@@ -9,10 +9,11 @@ import EditProfile from "components/EditProfile/EditProfile";
 import { Layout } from "antd";
 import "antd/dist/antd.css";
 import "./style.css";
-import QuickStart from "components/QuickStart";
+import Game from "components/Game";
 import Contract from "components/Contract/Contract";
 import MenuItems from "./components/MenuItems";
-const { Header, Footer } = Layout;
+import Background from "./assets/background.png";
+const { Header } = Layout;
 
 const styles = {
   content: {
@@ -56,7 +57,14 @@ const App = ({ isServerInfo }) => {
   }, [isAuthenticated, isWeb3Enabled]);
 
   return (
-    <Layout style={{ height: "100vh", overflow: "auto" }}>
+    <Layout
+      style={{
+        height: "100vh",
+        overflow: "auto",
+        backgroundImage: `url(${Background})`,
+        backgroundPosition: "center",
+      }}
+    >
       <Router>
         <Header style={styles.header}>
           <MenuItems />
@@ -72,14 +80,11 @@ const App = ({ isServerInfo }) => {
             <Route path="/nftBalance" element={<NFTBalance />} />
             <Route path="/profile" element={<EditProfile />} />
             <Route path="/contract" element={<Contract />} />
-            <Route
-              path="/"
-              element={<QuickStart isServerInfo={isServerInfo} />}
-            />
+            <Route path="/" element={<Game isServerInfo={isServerInfo} />} />
           </Routes>
         </div>
       </Router>
-      <Footer style={{ textAlign: "center" }}> </Footer>
+      {/* <Footer style={{ height: 0, textAlign: "center" }}> </Footer> */}
     </Layout>
   );
 };
