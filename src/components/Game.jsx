@@ -38,17 +38,37 @@ export default function Game() {
       setIsLoaded(true);
       console.log("loaded!!!");
     });
+    unityContext.on("trackSaved", (track) => {
+      //do track save
+      console.log(track);
+    });
   }, []);
+
+  const loadTrack = () => {
+    console.log("Loading Track...");
+  };
+
+  const saveTrack = () => {
+    console.log("Saving Track...");
+  };
 
   const handleFullScreen = () => {
     unityContext.setFullscreen(true);
   };
 
   const handleBoostButton = () => {
-    unityContext.send("BoostButton", "SetBoostSpeed");
+    unityContext.send("ButtonControler", "SetBoostSpeed");
   };
   const handleNormalButton = () => {
     unityContext.send("buttonUI", "SetNormalSpeed");
+  };
+  const handleSave = () => {
+    unityContext.send("Manager", "SaveTrackButton");
+    saveTrack();
+  };
+  const handleLoad = () => {
+    unityContext.send("Manager", "LoadTrack");
+    loadTrack();
   };
 
   /*
@@ -82,6 +102,8 @@ export default function Game() {
           <Button onClick={() => handleFullScreen()}>FullScreen</Button>
           <Button onClick={() => handleBoostButton()}>Boost</Button>
           <Button onClick={() => handleNormalButton()}>Normal</Button>
+          <Button onClick={() => handleSave()}>Save</Button>
+          <Button onClick={() => handleLoad()}>Load</Button>
         </Row>
         <Row>
           <div style={{ height: "80vh", width: "90vw" }}>

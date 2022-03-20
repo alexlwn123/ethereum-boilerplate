@@ -54,7 +54,10 @@ function NFTs() {
       }}
     >
       <h1>NFTs</h1>
-      <h4>Select an NFT to be your Snow Rider profile picture!</h4>
+      <h4>
+        Select an NFT to be your Snow Rider profile picture! Use a Snow Leopard
+        as your profile picture to post tracks online!
+      </h4>
       <div style={styles.NFTs}>
         <Skeleton loading={!NFTs?.result}>
           {NFTs?.result &&
@@ -82,7 +85,7 @@ function NFTs() {
                     width: 180,
                     border:
                       nft?.token_address === profilePicNft
-                        ? "10px solid #e7eaf3"
+                        ? "10px solid black"
                         : "2px solid #e7eaf3",
                   }}
                   bodyStyle={{

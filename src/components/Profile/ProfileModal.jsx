@@ -1,14 +1,14 @@
 import { useMoralis } from "react-moralis";
 import { useChain } from "react-moralis";
-import { useState, useEffect } from "react";
-import { Typography, Row, Button, Card, Modal, Col } from "antd";
+// import { useState, useEffect } from "react";
+import { Space, Input, Row, Button, Card, Modal, Col } from "antd";
 import Address from "../Address/Address";
 import { SelectOutlined } from "@ant-design/icons";
 import { getExplorer } from "helpers/networks";
 import Text from "antd/lib/typography/Text";
 import { Nfts } from "./Nfts";
 
-const { Paragraph } = Typography;
+const { Search } = Input;
 
 export const AVALANCHE_MAINNET_PARAMS = {
   chainId: "0xA86A",
@@ -51,27 +51,22 @@ const ProfileModal = (props) => {
   const { isModalVisible, setIsModalVisible, riderName } = props;
   const { account, logout, user } = useMoralis();
   const { chainId } = useChain();
-  const [userInput, setUserInput] = useState("");
-  const [stachedName, setStachedName] = useState(riderName);
-  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    setUserInput(riderName);
-  }, [riderName, setUserInput]);
-
-  const updateRiderName = async () => {
-    console.log("update", userInput);
-    setLoading(true);
-    await user.set("riderName", userInput);
+  const updateRiderName = async (value) => {
+    console.log("update", value);
+    await user.set("riderName", value);
     await user.save();
-    setStachedName(userInput);
     window.location.reload();
   };
 
-  const resetRiderName = () => {
-    console.log("cancel");
-    setUserInput(stachedName);
-  };
+  // const resetRiderName = () => {
+  //   console.log("cancel");
+  //   setUserInput(stachedName);
+  // };
+
+  // const handleChange = (event) => {
+  //   setUserInput(event.target.value);
+  // };
 
   return (
     <Modal
@@ -86,7 +81,6 @@ const ProfileModal = (props) => {
       style={{
         fontSize: "16px",
         fontWeight: "500",
-        backgroundColor: "rgba(255,255,255,0.9)",
       }}
       width="600px"
     >
@@ -102,31 +96,28 @@ const ProfileModal = (props) => {
       >
         <Text style={styles.sectionHeader}>Rider Info</Text>
         <div style={styles.select}>
-          <Row justify="start" gutter={[20, 20]} style={styles.row}>
-            <Col>
-              <Text>Rider Name</Text>
-            </Col>
-            <Col>
-              <Paragraph
-                editable={{
-                  onChange: setUserInput,
-                  onCancel: () => resetRiderName(),
-                  onClick: () => updateRiderName(),
-                }}
-              >
-                {userInput}
-              </Paragraph>
-            </Col>
-            <Col>
-              <Button
-                type="primary"
-                loading={loading}
-                onClick={() => updateRiderName()}
-              >
-                Update rider Name
-              </Button>
-            </Col>
-          </Row>
+          <Space direction="vertical">
+            <Row
+              justify="center"
+              align="middle"
+              gutter={[20, 20]}
+              type="flex"
+              style={styles.row}
+            >
+              <Col>
+                <Text>Rider Name</Text>
+              </Col>
+              <Col>
+                <Search
+                  placeholder={riderName}
+                  allowClear
+                  size="large"
+                  enterButton="Update Name"
+                  onSearch={updateRiderName}
+                />
+              </Col>
+            </Row>
+          </Space>
         </div>
       </Card>
       <Card

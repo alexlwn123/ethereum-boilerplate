@@ -18,6 +18,7 @@ const Application = () => {
     );
   if (isServerInfo)
     return (
+      // <AccessDB objectStore="tracks"
       <MoralisProvider appId={APP_ID} serverUrl={SERVER_URL}>
         <App />
       </MoralisProvider>

@@ -10,7 +10,6 @@ import { Layout } from "antd";
 import "antd/dist/antd.css";
 import "./style.css";
 import Game from "components/Game";
-import Contract from "components/Contract/Contract";
 import MenuItems from "./components/MenuItems";
 import Background from "./assets/background.png";
 const { Header } = Layout;
@@ -79,7 +78,6 @@ const App = () => {
             <Route path="/community" element={<Community />} />
             <Route path="/nfts" element={<NFTs />} />
             <Route path="/tracks" element={<Tracks />} />
-            <Route path="/contract" element={<Contract />} />
             <Route path="/" element={<Game />} />
           </Routes>
         </div>

@@ -12063,6 +12063,11 @@ react-final-form@^6.5.7:
   dependencies:
     "@babel/runtime" "^7.15.4"
 
+react-indexed-db@^1.0.12:
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/react-indexed-db/-/react-indexed-db-1.0.12.tgz#b8c6c4752a28eb2c6335b6b3289efc8262d119ae"
+  integrity sha512-39UY97QvH0BXke1dOa1jUIihjMSs5v4jMcUDZ3HBRKGr2kn6gnH5+7I0Px5Np9W8bomD7XTIXpCKVNrtKFQTIQ==
+
 react-is@^16.12.0, react-is@^16.13.1, react-is@^16.5.2, react-is@^16.6.0, react-is@^16.7.0:
   version "16.13.1"
   resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
