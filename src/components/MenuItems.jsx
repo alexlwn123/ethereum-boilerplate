@@ -15,16 +15,16 @@ function MenuItems() {
       }}
     >
       <Menu.Item key="/">
-        <Link to="/">🚀 Landing</Link>
+        <Link to="/">🚀 Game</Link>
       </Menu.Item>
-      <Menu.Item key="/erc20balance">
-        <Link to="/erc20balance">💰 Balances</Link>
+      <Menu.Item key="/tracks">
+        <Link to="/tracks">🖼 Tracks</Link>
       </Menu.Item>
-      <Menu.Item key="/nftBalance">
-        <Link to="/nftBalance">🖼 NFTs</Link>
+      <Menu.Item key="/community">
+        <Link to="/community">Community</Link>
       </Menu.Item>
-      <Menu.Item key="/profile">
-        <Link to="/profile">🖼 Profile</Link>
+      <Menu.Item key="/nfts">
+        <Link to="/nfts">🖼 NFTs</Link>
       </Menu.Item>
     </Menu>
   );

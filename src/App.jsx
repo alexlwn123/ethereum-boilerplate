@@ -3,9 +3,9 @@ import { useMoralis } from "react-moralis";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Chains from "components/Chains";
 import Profile from "components/Profile/Profile";
-import ERC20Balance from "components/ERC20Balance";
-import NFTBalance from "components/NFTBalance";
-import EditProfile from "components/EditProfile/EditProfile";
+import Community from "components/Community";
+import NFTs from "components/NFTs";
+import Tracks from "components/Tracks";
 import { Layout } from "antd";
 import "antd/dist/antd.css";
 import "./style.css";
@@ -21,7 +21,7 @@ const styles = {
     justifyContent: "center",
     fontFamily: "Roboto, sans-serif",
     color: "#041836",
-    marginTop: "130px",
+    marginTop: "70px",
     padding: "10px",
   },
   header: {
@@ -45,7 +45,7 @@ const styles = {
     fontWeight: "600",
   },
 };
-const App = ({ isServerInfo }) => {
+const App = () => {
   const { isWeb3Enabled, enableWeb3, isAuthenticated, isWeb3EnableLoading } =
     useMoralis();
 
@@ -76,11 +76,11 @@ const App = ({ isServerInfo }) => {
 
         <div style={styles.content}>
           <Routes>
-            <Route path="/erc20balance" element={<ERC20Balance />} />
-            <Route path="/nftBalance" element={<NFTBalance />} />
-            <Route path="/profile" element={<EditProfile />} />
+            <Route path="/community" element={<Community />} />
+            <Route path="/nfts" element={<NFTs />} />
+            <Route path="/tracks" element={<Tracks />} />
             <Route path="/contract" element={<Contract />} />
-            <Route path="/" element={<Game isServerInfo={isServerInfo} />} />
+            <Route path="/" element={<Game />} />
           </Routes>
         </div>
       </Router>
