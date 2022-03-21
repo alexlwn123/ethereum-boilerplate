@@ -38,9 +38,9 @@ export default function Game() {
       setIsLoaded(true);
       console.log("loaded!!!");
     });
-    unityContext.on("trackSaved", (track) => {
+    unityContext.on("SendTrackData", (track) => {
       //do track save
-      console.log(track);
+      console.log("SAVED", track);
     });
   }, []);
 
@@ -57,17 +57,17 @@ export default function Game() {
   };
 
   const handleBoostButton = () => {
-    unityContext.send("ButtonControler", "SetBoostSpeed");
+    unityContext.send("ButtonControler", "UseBoostLine");
   };
   const handleNormalButton = () => {
-    unityContext.send("buttonUI", "SetNormalSpeed");
+    unityContext.send("ButtonControler", "SetNormalSpeed");
   };
   const handleSave = () => {
-    unityContext.send("Manager", "SaveTrackButton");
+    unityContext.send("ButtonControler", "SaveTrack");
     saveTrack();
   };
   const handleLoad = () => {
-    unityContext.send("Manager", "LoadTrack");
+    unityContext.send("Manager", "LoadTrack", "{}");
     loadTrack();
   };
 

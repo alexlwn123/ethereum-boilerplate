@@ -3,7 +3,6 @@ import { useMoralis } from "react-moralis";
 // import { getEllipsisTxt } from "helpers/formatters";
 import AuthModal from "./AuthModal";
 import ProfileModal from "./ProfileModal";
-import { Image } from "antd";
 import Pic from "../../assets/Button-1.png";
 import { Offline, Online } from "react-detect-offline";
 
@@ -54,9 +53,11 @@ function Profile() {
           style={{ alignItems: "center" }}
         >
           {/* <p style={styles.text}>Authenticate</p> */}
-          <Image
-            style={{ width: "200px", marginTop: "30px" }}
-            preview={false}
+          <img
+            style={{
+              alignItems: "center",
+              width: "200px",
+            }}
             src={Pic}
           />
         </div>
