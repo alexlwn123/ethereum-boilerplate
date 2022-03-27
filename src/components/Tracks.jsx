@@ -1,6 +1,14 @@
 // import { useMoralis } from "react-moralis";
-import { Button, Skeleton, Table } from "antd";
+import { useEffect } from "react";
+import { useIndexedDB } from "react-indexed-db";
+import { Tabs, Button, Skeleton, Table } from "antd";
+const { TabPane } = Tabs;
 
+// const styles = {
+//   title: {
+//     textAlign: "center",
+//   },
+// };
 const loadTrack = (trackId) => {
   //TODO: Write load track code
   console.log("loading track:", trackId);
@@ -21,6 +29,20 @@ const getTracks = () => {
 const Tracks = () => {
   // const { data: assets } = useERC20Balances(props);
   // const { Moralis } = await useMoralis();
+  const { getAll, add } = useIndexedDB("tracks");
+  useEffect(() => {
+    add({
+      trackName: "",
+      creator: "",
+      plays: "",
+      published: false,
+      lines: [{ x1: 0, x2: 1, y1: 0, y2: 1 }],
+    });
+    getAll().then((res) => {
+      console.log(res);
+    });
+    // eslint-disable-next-line
+  }, []);
   const tracks = getTracks();
 
   const columns = [
@@ -62,15 +84,23 @@ const Tracks = () => {
     <div
       style={{
         backgroundColor: `rgba(255,255,255,0.9)`,
-        width: "65vw",
+        minWidth: "65vw",
         padding: "15px",
         marginTop: "100px",
       }}
     >
-      <h1>My Tracks</h1>
-      <Skeleton loading={!tracks}>
-        <Table dataSource={tracks} columns={columns} />
-      </Skeleton>
+      <Tabs>
+        <TabPane tab="Community Tracks" key="1">
+          <Skeleton loading={!tracks}>
+            <Table scroll={{ x: 600 }} dataSource={tracks} columns={columns} />
+          </Skeleton>
+        </TabPane>
+        <TabPane tab="My Tracks" key="2">
+          <Skeleton loading={!tracks}>
+            <Table scroll={{ x: 600 }} dataSource={tracks} columns={columns} />
+          </Skeleton>
+        </TabPane>
+      </Tabs>
     </div>
   );
 };

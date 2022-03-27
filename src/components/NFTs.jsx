@@ -47,17 +47,16 @@ function NFTs() {
     <div
       style={{
         backgroundColor: `rgba(255,255,255,0.9)`,
-        padding: "15px",
+        padding: "40px",
         maxWidth: "730px",
         width: "100%",
         marginTop: "100px",
       }}
     >
-      <h1>NFTs</h1>
-      <h4>
-        Select an NFT to be your Snow Rider profile picture! Use a Snow Leopard
-        as your profile picture to post tracks online!
-      </h4>
+      <div style={{ textAlign: "center", padding: "20px" }}>
+        <h1>NFTs</h1>
+        <h4>Select an NFT to be your Snow Rider profile picture!</h4>
+      </div>
       <div style={styles.NFTs}>
         <Skeleton loading={!NFTs?.result}>
           {NFTs?.result &&
