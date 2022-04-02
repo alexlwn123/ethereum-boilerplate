@@ -13,5 +13,13 @@ export const DBConfig = {
         { name: "lines", keypath: "lines", options: { unique: false } },
       ],
     },
+    {
+      store: "autosave",
+      storeConfig: { keyPath: "id", autoIncrement: true },
+      storeSchema: [
+        { name: "published", keypath: "published", options: { unique: false } },
+        { name: "lines", keypath: "lines", options: { unique: false } },
+      ],
+    },
   ],
 };

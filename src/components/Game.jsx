@@ -2,6 +2,7 @@ import { Space, Button, Row, Col } from "antd";
 import React, { useState, useEffect } from "react";
 // import { useMoralis } from "react-moralis";
 import Unity, { UnityContext } from "react-unity-webgl";
+import { useIndexedDB } from "react-indexed-db";
 
 const unityContext = new UnityContext({
   loaderUrl: "/game/snowRider-build.loader.js",
@@ -12,17 +13,46 @@ const unityContext = new UnityContext({
 
 export default function Game() {
   // const { Moralis } = useMoralis();
+
+  const autosaveTable = useIndexedDB("autosave");
   const [isLoaded, setIsLoaded] = useState(false);
   useEffect(() => {
     unityContext.setFullscreen(true);
-    unityContext.on("loaded", () => {
+    unityContext.on("loaded", async () => {
+      const lines = await autosaveTable.getAll("lines");
+      let arr = [];
+      lines.forEach((line, key) => {
+        arr.push(line.line);
+        console.log(line.line, key);
+      });
+
+      console.log("don", arr);
+      console.log("string", JSON.stringify(arr));
+      unityContext.send("Manager", "LoadJsonTrack", JSON.stringify(arr));
       setIsLoaded(true);
       console.log("loaded!!!");
     });
-    unityContext.on("SendTrackData", (data) => {
+    unityContext.on("SendTrackData", (bool, id, line) => {
       //do track save
-      console.log("SAVED", data);
+      //boolean --> true --> written,  false -->  delete
+      console.log("SAVED", bool, id, line);
+      if (bool) {
+        autosaveTable.add({ id: id, line: line }).then((res) => {
+          console.log("Added!", res);
+        });
+      } else {
+        autosaveTable.deleteRecord(Number.toString(id)).then((res) => {
+          console.log(res, "Deleted!");
+        });
+      }
     });
+    // unityContext.on("SendTrackData", (line) => {
+    //   //do track save
+    //   //boolean --> true --> written,  false -->  delete
+    //   console.log("SAVED", line);
+    //   autosaveTable.add({ id: 90, line: line });
+    // });
+    // eslint-disable-next-line
   }, []);
 
   const loadTrack = () => {
@@ -38,21 +68,21 @@ export default function Game() {
   };
 
   const handleBoostButton = () => {
-    unityContext.send("ButtonControler", "UseBoostLine");
+    unityContext.send("ButtonControler", "SetBoostLineType");
   };
   const handleNormalButton = () => {
     unityContext.send("ButtonControler", "SetNormalSpeed");
   };
   const handleSave = () => {
-    unityContext.send("ButtonControler", "SaveTrack");
+    unityContext.send("Manager", "SendTrackData");
     saveTrack();
   };
   const handleLoad = () => {
-    unityContext.send("Manager", "LoadTrack", "{}");
+    unityContext.send("LineManager", "LoadTrack", "{}");
     loadTrack();
   };
   const handlePublish = () => {
-    unityContext.send("Manager", "LoadTrack", "{}");
+    unityContext.send("LineManager", "LoadTrack", "{}");
     loadTrack();
   };
 

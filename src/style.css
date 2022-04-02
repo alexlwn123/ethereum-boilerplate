@@ -11,8 +11,8 @@
 .ant-menu-horizontal > img {
   -webkit-transform: scale(1);
   transform: scale(1);
-  -webkit-transition: 0.5s ease-in-out;
-  transition: 0.5s ease-in-out;
+  -webkit-transition: 0.3s ease-in-out;
+  transition: 0.3s ease-in-out;
   overflow: hidden;
   display: block;
   width: 100%;

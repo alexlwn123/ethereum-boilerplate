@@ -29,17 +29,21 @@ const getTracks = () => {
 const Tracks = () => {
   // const { data: assets } = useERC20Balances(props);
   // const { Moralis } = await useMoralis();
-  const { getAll, add } = useIndexedDB("tracks");
+  const tracksTable = useIndexedDB("tracks");
+  // const autosaveTable = useIndexedDB("autosave");
   useEffect(() => {
-    add({
-      trackName: "",
-      creator: "",
-      plays: "",
-      published: false,
-      lines: [{ x1: 0, x2: 1, y1: 0, y2: 1 }],
-    });
-    getAll().then((res) => {
+    // add({
+    //   trackName: "",
+    //   creator: "",
+    //   plays: "",
+    //   published: false,
+    //   lines: [{ x1: 0, x2: 1, y1: 0, y2: 1 }],
+    // });
+    tracksTable.getAll().then((res) => {
       console.log(res);
+    });
+    tracksTable.getByID(1).then((res) => {
+      console.log("line", res);
     });
     // eslint-disable-next-line
   }, []);
