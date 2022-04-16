@@ -12,60 +12,45 @@ const unityContext = new UnityContext({
 });
 
 export default function Game() {
-  // const { Moralis } = useMoralis();
-
-  const { add, getByIndex, deleteRecord, getAll } = useIndexedDB("autosave");
+  const { add, getByIndex, deleteRecord, getAll, clear } =
+    useIndexedDB("autosave");
   const [isLoaded, setIsLoaded] = useState(false);
+  const [savedTrack, setSavedTrack] = useState("[]");
   useEffect(() => {
     unityContext.setFullscreen(true);
     unityContext.on("loaded", async () => {
-      const lines = await getAll("lines");
-      let arr = [];
-      lines.forEach((line, key) => {
-        arr.push(line.line);
-        console.log(line.line, key);
-      });
-
-      console.log("don", arr);
-      console.log("string", JSON.stringify(arr));
-      unityContext.send("Manager", "LoadJsonTrack", JSON.stringify(arr));
-      setIsLoaded(true);
+      const lines = await serializeLines();
+      await unityContext.send("Manager", "LoadJsonTrack", lines);
       console.log("loaded!!!");
+      setIsLoaded(true);
     });
     unityContext.on("SendTrackData", (bool, id, line) => {
       //do track save
       //boolean --> true --> written,  false -->  delete
       console.log("SAVED", bool, id, line);
       if (bool) {
-        add({ id: id, line: line }).then((res) => {
-          console.log("Added!", res);
-        });
+        add({ id: id, line: line }); //.then((res) => {console.log('asdf')});
       } else {
-        console.log("deleting", id);
-        getByIndex("line", line).then((line) => {
-          console.log("line", line);
-        });
+        // console.log("deleting", id);
+        getByIndex("line", line); //.then((line) => { console.log("line", line); });
 
         deleteRecord(line).then((res) => {
           console.log(res, "Deleted!");
         });
       }
     });
-    // unityContext.on("SendTrackData", (line) => {
-    //   //do track save
-    //   //boolean --> true --> written,  false -->  delete
-    //   console.log("SAVED", line);
-    //   autosaveTable.add({ id: 90, line: line });
-    // });
     // eslint-disable-next-line
   }, []);
 
-  const loadTrack = () => {
-    console.log("Loading Track...");
-  };
+  const serializeLines = async () => {
+    const lines = await getAll("lines");
+    let arr = [];
+    await lines.forEach((line, key) => {
+      arr.push(line.line);
+      console.log(line.line, key);
+    });
 
-  const saveTrack = () => {
-    console.log("Saving Track...");
+    return await JSON.stringify(arr);
   };
 
   const handleFullScreen = () => {
@@ -78,17 +63,22 @@ export default function Game() {
   const handleNormalButton = () => {
     unityContext.send("ButtonControler", "SetNormalSpeed");
   };
-  const handleSave = () => {
-    unityContext.send("Manager", "SendTrackData");
-    saveTrack();
+  const handleSave = async () => {
+    const lines = await serializeLines();
+    setSavedTrack(lines);
   };
+
   const handleLoad = () => {
-    unityContext.send("LineManager", "LoadTrack", "{}");
-    loadTrack();
+    console.log("saved", savedTrack);
+    unityContext.send("Manager", "LoadJsonTrack", savedTrack);
   };
   const handlePublish = () => {
     unityContext.send("LineManager", "LoadTrack", "{}");
-    loadTrack();
+  };
+
+  const handleClear = () => {
+    unityContext.send("Manager", "ClearAll", "{}");
+    clear();
   };
 
   /*
@@ -123,6 +113,7 @@ export default function Game() {
             <Button onClick={() => handleSave()}>Save</Button>
             <Button onClick={() => handleLoad()}>Load</Button>
             <Button onClick={() => handlePublish()}>Publish</Button>
+            <Button onClick={() => handleClear()}>Clear</Button>
           </Row>
           <Row>
             <div style={{ height: "80vh", width: "60vw" }}>
