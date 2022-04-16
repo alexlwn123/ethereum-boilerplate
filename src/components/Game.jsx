@@ -70,6 +70,10 @@ export default function Game() {
 
   const handleLoad = () => {
     console.log("saved", savedTrack);
+
+    const strs = JSON.parse(savedTrack);
+    console.log("strs", strs);
+    strs.forEach((line, key) => add({ id: key, line: line }));
     unityContext.send("Manager", "LoadJsonTrack", savedTrack);
   };
   const handlePublish = () => {

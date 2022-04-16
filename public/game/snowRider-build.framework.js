@@ -1335,7 +1335,7 @@ function unityFramework(Module) {
     return ASM_CONSTS[code]();
   }
   STATIC_BASE = GLOBAL_BASE;
-  STATICTOP = STATIC_BASE + 2951472;
+  STATICTOP = STATIC_BASE + 2952128;
   __ATINIT__.push(
     {
       func: function () {
@@ -2503,7 +2503,7 @@ function unityFramework(Module) {
       },
     },
   );
-  var STATIC_BUMP = 2951472;
+  var STATIC_BUMP = 2952128;
   Module["STATIC_BASE"] = STATIC_BASE;
   Module["STATIC_BUMP"] = STATIC_BUMP;
   var tempDoublePtr = STATICTOP;
