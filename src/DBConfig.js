@@ -4,7 +4,7 @@ export const DBConfig = {
   objectStoresMeta: [
     {
       store: "tracks",
-      storeConfig: { keyPath: "id", autoIncrement: true },
+      storeConfig: { keyPath: "id" },
       storeSchema: [
         { name: "trackName", keypath: "trackName", options: { unique: false } },
         { name: "creator", keypath: "creator", options: { unique: false } },
@@ -15,10 +15,9 @@ export const DBConfig = {
     },
     {
       store: "autosave",
-      storeConfig: { keyPath: "id", autoIncrement: true },
+      storeConfig: { keyPath: "line" },
       storeSchema: [
-        { name: "published", keypath: "published", options: { unique: false } },
-        { name: "lines", keypath: "lines", options: { unique: false } },
+        { name: "line", keypath: "line", options: { unique: false } },
       ],
     },
   ],

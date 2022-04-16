@@ -14,12 +14,12 @@ const unityContext = new UnityContext({
 export default function Game() {
   // const { Moralis } = useMoralis();
 
-  const autosaveTable = useIndexedDB("autosave");
+  const { add, getByIndex, deleteRecord, getAll } = useIndexedDB("autosave");
   const [isLoaded, setIsLoaded] = useState(false);
   useEffect(() => {
     unityContext.setFullscreen(true);
     unityContext.on("loaded", async () => {
-      const lines = await autosaveTable.getAll("lines");
+      const lines = await getAll("lines");
       let arr = [];
       lines.forEach((line, key) => {
         arr.push(line.line);
@@ -37,11 +37,16 @@ export default function Game() {
       //boolean --> true --> written,  false -->  delete
       console.log("SAVED", bool, id, line);
       if (bool) {
-        autosaveTable.add({ id: id, line: line }).then((res) => {
+        add({ id: id, line: line }).then((res) => {
           console.log("Added!", res);
         });
       } else {
-        autosaveTable.deleteRecord(Number.toString(id)).then((res) => {
+        console.log("deleting", id);
+        getByIndex("line", line).then((line) => {
+          console.log("line", line);
+        });
+
+        deleteRecord(line).then((res) => {
           console.log(res, "Deleted!");
         });
       }
