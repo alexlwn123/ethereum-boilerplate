@@ -6,9 +6,9 @@ import { useIndexedDB } from "react-indexed-db";
 
 const unityContext = new UnityContext({
   loaderUrl: "/game/snowRider-build.loader.js",
-  dataUrl: "/game/snowRider-build.data",
+  dataUrl: "/game/snowRider-build.data.js",
   frameworkUrl: "/game/snowRider-build.framework.js",
-  codeUrl: "/game/snowRider-build.wasm",
+  codeUrl: "/game/snowRider-build.wasm.js",
 });
 
 export default function Game() {
@@ -29,7 +29,7 @@ export default function Game() {
       //boolean --> true --> written,  false -->  delete
       console.log("SAVED", bool, id, line);
       if (bool) {
-        add({ id: id, line: line }); //.then((res) => {console.log('asdf')});
+        add({ line: line }); //.then((res) => {console.log('asdf')});
       } else {
         // console.log("deleting", id);
         getByIndex("line", line); //.then((line) => { console.log("line", line); });
@@ -49,8 +49,9 @@ export default function Game() {
       arr.push(line.line);
       console.log(line.line, key);
     });
+    const obj = { Items: lines };
 
-    return await JSON.stringify(arr);
+    return await JSON.stringify(obj);
   };
 
   const handleFullScreen = () => {
@@ -72,9 +73,14 @@ export default function Game() {
     console.log("saved", savedTrack);
 
     const strs = JSON.parse(savedTrack);
-    console.log("strs", strs);
-    strs.forEach((line, key) => add({ id: key, line: line }));
-    unityContext.send("Manager", "LoadJsonTrack", savedTrack);
+    console.log("savedTrack", savedTrack);
+    console.log("strs", strs.Items);
+    strs.Items.forEach((line, key) => {
+      key;
+      console.log(line.line);
+      add({ line: line.line });
+    });
+    unityContext.send("Manager", "UploadJsonTrack", savedTrack);
   };
   const handlePublish = () => {
     unityContext.send("LineManager", "LoadTrack", "{}");
