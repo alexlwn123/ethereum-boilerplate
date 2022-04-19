@@ -3,24 +3,34 @@ import React, { useState, useEffect } from "react";
 // import { useMoralis } from "react-moralis";
 import Unity, { UnityContext } from "react-unity-webgl";
 import { useIndexedDB } from "react-indexed-db";
+import { useParams } from "react-router-dom";
 
 const unityContext = new UnityContext({
   loaderUrl: "/game/snowRider-build.loader.js",
-  dataUrl: "/game/snowRider-build.data.js",
+  dataUrl: "/game/snowRider-build.data",
   frameworkUrl: "/game/snowRider-build.framework.js",
-  codeUrl: "/game/snowRider-build.wasm.js",
+  codeUrl: "/game/snowRider-build.wasm",
 });
 
 export default function Game() {
   const { add, getByIndex, deleteRecord, getAll, clear } =
     useIndexedDB("autosave");
+  const Tracks = useIndexedDB("tracks");
   const [isLoaded, setIsLoaded] = useState(false);
-  const [savedTrack, setSavedTrack] = useState("[]");
+  const { trackid } = useParams();
+  // const [savedTrack, setSavedTrack] = useState("[]");
   useEffect(() => {
     unityContext.setFullscreen(true);
     unityContext.on("loaded", async () => {
-      const lines = await serializeLines();
-      await unityContext.send("Manager", "LoadJsonTrack", lines);
+      // console.log(await Tracks.getByID(trackid));
+      const strs = JSON.parse(
+        trackid == null
+          ? await serializeLines()
+          : (await Tracks.getByID(trackid)).lines,
+      );
+      const out = JSON.stringify({ Items: strs });
+      unityContext.send("Manager", "UploadJsonTrack", out);
+
       console.log("loaded!!!");
       setIsLoaded(true);
     });
@@ -34,9 +44,7 @@ export default function Game() {
         // console.log("deleting", id);
         getByIndex("line", line); //.then((line) => { console.log("line", line); });
 
-        deleteRecord(line).then((res) => {
-          console.log(res, "Deleted!");
-        });
+        deleteRecord(line);
       }
     });
     // eslint-disable-next-line
@@ -45,13 +53,12 @@ export default function Game() {
   const serializeLines = async () => {
     const lines = await getAll("lines");
     let arr = [];
-    await lines.forEach((line, key) => {
+    console.log("ser", lines);
+    await lines.forEach((line) => {
       arr.push(line.line);
-      console.log(line.line, key);
     });
-    const obj = { Items: lines };
 
-    return await JSON.stringify(obj);
+    return await JSON.stringify(arr);
   };
 
   const handleFullScreen = () => {
@@ -66,21 +73,26 @@ export default function Game() {
   };
   const handleSave = async () => {
     const lines = await serializeLines();
-    setSavedTrack(lines);
+    Tracks.add({
+      creator: "myName",
+      published: false,
+      trackName: "testName",
+      lines: lines,
+      plays: 0,
+      id: 3,
+    });
   };
 
   const handleLoad = () => {
-    console.log("saved", savedTrack);
-
-    const strs = JSON.parse(savedTrack);
-    console.log("savedTrack", savedTrack);
-    console.log("strs", strs.Items);
-    strs.Items.forEach((line, key) => {
+    const trackString = Tracks.getByID(0);
+    const strs = JSON.parse(trackString);
+    strs.forEach((line, key) => {
       key;
-      console.log(line.line);
-      add({ line: line.line });
+      console.log(line);
+      add({ line: line });
     });
-    unityContext.send("Manager", "UploadJsonTrack", savedTrack);
+    const out = JSON.stringify({ Items: strs });
+    unityContext.send("Manager", "UploadJsonTrack", out);
   };
   const handlePublish = () => {
     unityContext.send("LineManager", "LoadTrack", "{}");

@@ -87,6 +87,7 @@ const App = () => {
             <Route path="/community" element={<Community />} />
             <Route path="/nfts" element={<NFTs />} />
             <Route path="/tracks" element={<Tracks />} />
+            <Route path="/game/:trackid" element={<Game />} />
             <Route path="/" element={<Game />} />
           </Routes>
         </div>

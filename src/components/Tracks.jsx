@@ -1,61 +1,39 @@
 // import { useMoralis } from "react-moralis";
-import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useIndexedDB } from "react-indexed-db";
 import { Tabs, Button, Skeleton, Table } from "antd";
 const { TabPane } = Tabs;
 
-// const styles = {
-//   title: {
-//     textAlign: "center",
-//   },
-// };
-const loadTrack = (trackId) => {
-  //TODO: Write load track code
-  console.log("loading track:", trackId);
-};
-const getTracks = () => {
-  return [
-    {
-      key: 0,
-      trackName: "Track 1",
-      author: "Xian",
-      snowLeopard: 913,
-      trackId: 0,
-      plays: 12312,
-    },
-  ];
-};
-
 const Tracks = () => {
   // const { data: assets } = useERC20Balances(props);
   // const { Moralis } = await useMoralis();
-  const tracksTable = useIndexedDB("tracks");
+  const { getAll } = useIndexedDB("tracks");
   // const autosaveTable = useIndexedDB("autosave");
+
+  const loadTrack = (trackId) => {
+    //TODO: Write load track code
+    console.log("loading track:", trackId);
+  };
+
+  const [tracks, setTracks] = useState([]);
+
   useEffect(() => {
-    // add({
-    //   trackName: "",
-    //   creator: "",
-    //   plays: "",
-    //   published: false,
-    //   lines: [{ x1: 0, x2: 1, y1: 0, y2: 1 }],
-    // });
-    tracksTable.getAll().then((res) => {
-      console.log(res);
-    });
-    tracksTable.getByID(1).then((res) => {
-      console.log("line", res);
+    getAll().then((res) => {
+      setTracks(res);
     });
     // eslint-disable-next-line
   }, []);
-  const tracks = getTracks();
 
   const columns = [
     {
       title: "",
-      dataIndex: "trackId",
+      dataIndex: "id",
       key: "trackId",
       render: (trackId) => (
-        <Button onClick={() => loadTrack(trackId)}>Play!</Button>
+        <Link to={"/game/" + parseInt(trackId)}>
+          <Button onClick={() => loadTrack(trackId)}>Play!</Button>
+        </Link>
       ),
     },
     {
@@ -66,7 +44,7 @@ const Tracks = () => {
     },
     {
       title: "Author",
-      dataIndex: "author",
+      dataIndex: "creator",
       key: "author",
       render: (author) => author,
     },
@@ -94,12 +72,12 @@ const Tracks = () => {
       }}
     >
       <Tabs>
-        <TabPane tab="Community Tracks" key="1">
+        <TabPane tab="My Tracks" key="1">
           <Skeleton loading={!tracks}>
             <Table scroll={{ x: 600 }} dataSource={tracks} columns={columns} />
           </Skeleton>
         </TabPane>
-        <TabPane tab="My Tracks" key="2">
+        <TabPane tab="Community Tracks" key="2">
           <Skeleton loading={!tracks}>
             <Table scroll={{ x: 600 }} dataSource={tracks} columns={columns} />
           </Skeleton>
