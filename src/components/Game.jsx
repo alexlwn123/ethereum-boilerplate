@@ -65,12 +65,6 @@ export default function Game() {
     unityContext.setFullscreen(true);
   };
 
-  const handleBoostButton = () => {
-    unityContext.send("ButtonControler", "SetBoostLineType");
-  };
-  const handleNormalButton = () => {
-    unityContext.send("ButtonControler", "SetNormalSpeed");
-  };
   const handleSave = async () => {
     const lines = await serializeLines();
     Tracks.add({
@@ -83,20 +77,17 @@ export default function Game() {
     });
   };
 
-  const handleLoad = () => {
-    const trackString = Tracks.getByID(0);
-    const strs = JSON.parse(trackString);
-    strs.forEach((line, key) => {
-      key;
-      console.log(line);
-      add({ line: line });
-    });
-    const out = JSON.stringify({ Items: strs });
-    unityContext.send("Manager", "UploadJsonTrack", out);
-  };
-  const handlePublish = () => {
-    unityContext.send("LineManager", "LoadTrack", "{}");
-  };
+  // const handleLoad = () => {
+  //   const trackString = Tracks.getByID(0);
+  //   const strs = JSON.parse(trackString);
+  //   strs.forEach((line, key) => {
+  //     key;
+  //     console.log(line);
+  //     add({ line: line });
+  //   });
+  //   const out = JSON.stringify({ Items: strs });
+  //   unityContext.send("Manager", "UploadJsonTrack", out);
+  // };
 
   const handleClear = () => {
     unityContext.send("Manager", "ClearAll", "{}");
@@ -130,11 +121,7 @@ export default function Game() {
         <Col justify="center">
           <Row>
             <Button onClick={() => handleFullScreen()}>FullScreen</Button>
-            <Button onClick={() => handleBoostButton()}>Boost</Button>
-            <Button onClick={() => handleNormalButton()}>Normal</Button>
             <Button onClick={() => handleSave()}>Save</Button>
-            <Button onClick={() => handleLoad()}>Load</Button>
-            <Button onClick={() => handlePublish()}>Publish</Button>
             <Button onClick={() => handleClear()}>Clear</Button>
           </Row>
           <Row>
