@@ -6,11 +6,10 @@ import { useIndexedDB } from "react-indexed-db";
 import { useParams } from "react-router-dom";
 
 const unityContext = new UnityContext({
-  loaderUrl: "https://snowrider.s3.amazonaws.com/snowRider-build.loader.js",
-  dataUrl: "https://snowrider.s3.amazonaws.com/snowRider-build.data",
-  frameworkUrl:
-    "https://snowrider.s3.amazonaws.com/snowRider-build.framework.js",
-  codeUrl: "https://snowrider.s3.amazonaws.com/snowRider-build.wasm",
+  loaderUrl: "/snowRider-build.loader.js",
+  dataUrl: "/snowRider-build.data",
+  frameworkUrl: "/snowRider-build.framework.js",
+  codeUrl: "/snowRider-build.wasm",
 });
 
 export default function Game() {
